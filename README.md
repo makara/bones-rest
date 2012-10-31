@@ -1,2 +1,19 @@
-bones-rest
-==========
+# Bones rest
+
+Adds "resource(s)" which is both
+
+* A wrap of Express application;
+* An experimental conversion of Bones "servers" that demonstrates a potential solution of upgrading to Express 3.x.
+
+Overrides the "Core" server, so it ...
+
+Comes with some demo resources
+
+* **Restify**: ...
+* **Model**: ...
+* **Cors**: ...
+* **Jsonp**: ...
+
+And a demo server
+
+* **Resource**: ...

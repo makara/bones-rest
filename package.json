@@ -1,0 +1,26 @@
+{
+  "author": "Makara Wang <makara@wiredcraft.com> (https://github.com/makara)",
+  "name": "bones-rest",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [
+    "bones",
+    "rest"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/makara/bones-rest.git"
+  },
+  "dependencies": {
+    "methods": "~0.0.1"
+  },
+  "devDependencies": {
+    "bones-test": "~0.0.4",
+    "mocha": "1.x",
+    "request": "2.x",
+    "should": "1.x"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha ./test/*.mocha.js"
+  }
+}

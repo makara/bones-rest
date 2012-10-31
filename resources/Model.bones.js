@@ -1,7 +1,3 @@
-var headers = {
-    'Content-Type': 'application/json'
-};
-
 // A demo resource. Provides the model CRUD end-points.
 // @see bones/servers/Route.bones.js
 // TODO: reorganize methods.
@@ -37,7 +33,7 @@ resource = Bones.Resource.extend({
             this.collection = new this.models[name]([], req.query);
             this.collection.fetch({
                 success: function(collection, resp) {
-                    res.send(resp, headers);
+                    res.json(resp);
                 },
                 error: function(collection, err) {
                     var error = err instanceof Object ? err.message : err;
@@ -60,7 +56,7 @@ resource = Bones.Resource.extend({
     getModel: function(req, res, next) {
         this.model.fetch({
             success: function(model, resp) {
-                res.send(resp, headers);
+                res.json(resp);
             },
             error: function(model, err) {
                 var error = err instanceof Object ? err.message : err;
@@ -72,7 +68,7 @@ resource = Bones.Resource.extend({
     saveModel: function(req, res, next) {
         this.model.save(req.body, {
             success: function(model, resp) {
-                res.send(resp, headers);
+                res.json(resp);
             },
             error: function(model, err) {
                 var error = err instanceof Object ? err.message : err;
@@ -84,7 +80,7 @@ resource = Bones.Resource.extend({
     delModel: function(req, res, next) {
         this.model.destroy({
             success: function(model, resp) {
-                res.send({}, headers);
+                res.json({});
             },
             error: function(model, err) {
                 var error = err instanceof Object ? err.message : err;

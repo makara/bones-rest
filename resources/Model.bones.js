@@ -1,31 +1,39 @@
 // A demo resource. Provides the model CRUD end-points.
 // @see bones/servers/Route.bones.js
-// TODO: reorganize methods.
 resource = Bones.Resource.extend({
     // The model name.
     name: null,
     // The base route path.
     route: null,
-    // .
+    // The default routers for a model.
+    // TODO: what about collection?
     initialize: function(options) {
         options || (options = {});
         options.name && (this.name = options.name);
 
-        // .
+        // No routers if no model.
         if (!this.name || !models[this.name]) return;
 
-        _.bindAll(this, 'loadModel', 'getModel', 'saveModel', 'delModel',
-            'loadCollection');
+        _.bindAll(this, 'prepareModel', 'fetchModel', 'saveModel', 'readModel',
+            'deleteModel', 'loadCollection');
 
+        // Always prepare a model.
+        this.use(this.prepareModel);
         // Index.
         this.get('/', this.loadCollection);
+        // Param.
+        this.param('id', this.fetchModel);
         // CRUD.
-        this.post('/', this.loadModel, this.saveModel);
-        this.get('/:id', this.loadModel, this.getModel);
-        this.put('/:id', this.loadModel, this.saveModel);
-        this.del('/:id', this.loadModel, this.delModel);
+        this.post('/', this.saveModel);
+        this.get('/:id', this.readModel);
+        this.put('/:id', this.saveModel);
+        this.del('/:id', this.deleteModel);
     },
-    // .
+    prepareModel: function(req, res, next) {
+        // Pass any querystring paramaters to the model.
+        this.model = new models[this.name]({}, req.query);
+        next();
+    },
     loadCollection: function(req, res, next) {
         var name = Bones.utils.pluralize(this.name);
         if (name in models) {
@@ -44,19 +52,14 @@ resource = Bones.Resource.extend({
             next();
         }
     },
-    // .
-    loadModel: function(req, res, next) {
-        // Pass any querystring paramaters to the model.
-        this.model = new models[this.name]({
-            id: req.params.id
-        }, req.query);
-        next();
-    },
-    // .
-    getModel: function(req, res, next) {
-        this.model.fetch({
+    fetchModel: function(req, res, next, id) {
+        // Model can have an idAttribute other than id.
+        var data = {};
+        data[this.model.idAttribute || 'id'] = id;
+        this.model.set(data).fetch({
             success: function(model, resp) {
-                res.json(resp);
+                // TODO: put model into req?
+                next();
             },
             error: function(model, err) {
                 var error = err instanceof Object ? err.message : err;
@@ -64,7 +67,9 @@ resource = Bones.Resource.extend({
             }
         });
     },
-    // .
+    readModel: function(req, res, next) {
+        res.json(this.model.toJSON());
+    },
     saveModel: function(req, res, next) {
         this.model.save(req.body, {
             success: function(model, resp) {
@@ -76,8 +81,7 @@ resource = Bones.Resource.extend({
             }
         });
     },
-    // .
-    delModel: function(req, res, next) {
+    deleteModel: function(req, res, next) {
         this.model.destroy({
             success: function(model, resp) {
                 res.json({});

@@ -56,7 +56,9 @@ resource = Bones.Resource.extend({
         // Model can have an idAttribute other than id.
         var data = {};
         data[this.model.idAttribute || 'id'] = id;
-        this.model.set(data).fetch({
+        this.model.set(data, {
+            silent: true
+        }).fetch({
             success: function(model, resp) {
                 // TODO: put model into req?
                 next();

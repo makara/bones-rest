@@ -28,9 +28,9 @@ resource = Bones.Resource.extend({
     // .
     loadCollection: function(req, res, next) {
         var name = Bones.utils.pluralize(this.name);
-        if (name in this.models) {
+        if (name in models) {
             // Pass any querystring paramaters to the collection.
-            this.collection = new this.models[name]([], req.query);
+            this.collection = new models[name]([], req.query);
             this.collection.fetch({
                 success: function(collection, resp) {
                     res.json(resp);

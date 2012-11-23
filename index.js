@@ -20,5 +20,13 @@ plugin.load = _(plugin.load).wrap(function(parent, dir) {
     return self;
 });
 
+// Support bones-mixin.
+// TODO: maybe drop the custom plugin above and use bones-mixin.
+try {
+    var bonesMixin = require('bones-mixin');
+    bonesMixin(Bones.Resource);
+    bonesMixin(Bones.Resource.prototype);
+} catch (err) {}
+
 // Load me.
 Bones.load(__dirname);
